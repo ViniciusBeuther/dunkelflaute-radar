@@ -1,0 +1,21 @@
+# Python / uv
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Secrets
+.env
+
+# Dados brutos e warehouse local (não versionamos dados, só código)
+data/raw/**/*.parquet
+warehouse/*.duckdb
+warehouse/*.duckdb.wal
+
+# dbt
+dbt/dunkelflaute_radar/target/
+dbt/dunkelflaute_radar/dbt_packages/
+dbt/dunkelflaute_radar/logs/
+
+# macOS
+.DS_Store

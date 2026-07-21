@@ -7,7 +7,7 @@ __pycache__/
 # Secrets
 .env
 
-# Dados brutos e warehouse local (não versionamos dados, só código)
+# Raw data and local warehouse (we version code, not data)
 data/raw/**/*.parquet
 warehouse/*.duckdb
 warehouse/*.duckdb.wal

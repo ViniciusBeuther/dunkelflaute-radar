@@ -1,32 +1,33 @@
 # Dunkelflaute Radar
 
-ELT diário de dados de clima, energia e qualidade do ar da Europa para prever
-janelas de baixa geração eólica/solar ("Dunkelflaute") e quantificar seu
-impacto em preço, carbono e qualidade do ar. Ver [DESCRIPTION.md](DESCRIPTION.md)
-para o contexto completo do problema e a arquitetura-alvo.
+Daily ELT pipeline for European weather, energy, and air quality data,
+forecasting low wind/solar generation windows ("Dunkelflaute") and
+quantifying their impact on price, carbon, and air quality. See
+[DESCRIPTION.md](DESCRIPTION.md) for the full problem context and target
+architecture.
 
-Projeto de aprendizado: construído incrementalmente enquanto se aprende dbt,
-Airflow e engenharia de dados moderna. Estado atual: **Fase 1 — Encanamento
-sólido** (ingestão + landing zone + dbt staging, sem orquestrador ainda).
+Learning project: built incrementally while learning dbt, Airflow, and
+modern data engineering. Current state: **Phase 1 — Solid plumbing**
+(ingestion + landing zone + dbt staging, no orchestrator yet).
 
 ## Setup
 
-Pré-requisitos: [uv](https://docs.astral.sh/uv/) instalado.
+Prerequisite: [uv](https://docs.astral.sh/uv/) installed.
 
 ```bash
-uv sync                    # cria .venv e instala dependências, usando Python 3.11 (fixado em .python-version)
-cp .env.example .env       # preencha ENTSOE_API_TOKEN (ver instruções no arquivo)
+uv sync                    # creates .venv and installs dependencies, using Python 3.11 (pinned in .python-version)
+cp .env.example .env       # fill in ENTSOE_API_TOKEN (see instructions in the file)
 ```
 
-## Estrutura
+## Structure
 
-- `ingestion/` — scripts Python de ingestão por fonte (Open-Meteo, ENTSO-E)
-- `data/raw/` — landing zone local em Parquet, particionada por zona/data,
-  simulando um data lake S3 (migração para S3/MinIO real fica para depois)
-- `dbt/dunkelflaute_radar/` — projeto dbt (staging → intermediate → marts)
-- `warehouse/` — arquivo DuckDB local (gerado, não versionado)
-- `tests/` — testes unitários dos scripts de ingestão
+- `ingestion/` — per-source Python ingestion scripts (Open-Meteo, ENTSO-E)
+- `data/raw/` — local Parquet landing zone, partitioned by zone/date,
+  standing in for an S3 data lake (migration to real S3/MinIO comes later)
+- `dbt/dunkelflaute_radar/` — dbt project (staging → intermediate → marts)
+- `warehouse/` — local DuckDB file (generated, not versioned)
+- `tests/` — unit tests for the ingestion scripts
 
-## Rodando a ingestão (manual, sem orquestrador por enquanto)
+## Running ingestion (manual, no orchestrator yet)
 
-_A ser preenchido conforme os marcos M3–M5 do plano forem implementados._
+_To be filled in as milestones M3–M5 of the plan are implemented._

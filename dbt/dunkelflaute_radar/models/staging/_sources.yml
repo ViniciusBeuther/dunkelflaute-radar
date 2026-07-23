@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: raw
+    tables:
+      - name: openmeteo_weather
+        meta:
+          external_location: "read_parquet('data/raw/openmeteo/weather_forecast/zone=*/ingest_date=*/*.parquet', hive_partitioning = true)"
+      - name: entsoe_generation
+        meta:
+          external_location: "read_parquet('data/raw/entsoe/generation/zone=*/ingest_date=*/*.parquet', hive_partitioning = true)"

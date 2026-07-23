@@ -1,0 +1,17 @@
+name: 'dunkelflaute_radar'
+version: '1.0.0'
+
+profile: 'dunkelflaute_radar'
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  dunkelflaute_radar:
+    staging:
+      +materialized: view

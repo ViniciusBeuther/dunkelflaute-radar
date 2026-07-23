@@ -1,0 +1,7 @@
+dunkelflaute_radar:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: 'warehouse/dunkelflaute.duckdb'
+      threads: 4

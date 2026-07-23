@@ -17,5 +17,9 @@ dbt/dunkelflaute_radar/target/
 dbt/dunkelflaute_radar/dbt_packages/
 dbt/dunkelflaute_radar/logs/
 
+# airflow
+airflow/logs
+airflow/config
+
 # macOS
 .DS_Store

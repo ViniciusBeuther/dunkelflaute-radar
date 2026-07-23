@@ -16,6 +16,7 @@ warehouse/*.duckdb.wal
 dbt/dunkelflaute_radar/target/
 dbt/dunkelflaute_radar/dbt_packages/
 dbt/dunkelflaute_radar/logs/
+dbt/dunkelflaute_radar/.user.yml
 
 # airflow
 airflow/logs

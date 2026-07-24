@@ -6,6 +6,14 @@ sources:
       - name: openmeteo_weather
         meta:
           external_location: "read_parquet('data/raw/openmeteo/weather_forecast/zone=*/ingest_date=*/*.parquet', hive_partitioning = true)"
+        loaded_at_field: ingest_ts
+        freshness:
+          warn_after: {count: 26, period: hour}
+          error_after: {count: 50, period: hour}
       - name: entsoe_generation
         meta:
           external_location: "read_parquet('data/raw/entsoe/generation/zone=*/ingest_date=*/*.parquet', hive_partitioning = true)"
+        loaded_at_field: ingest_ts
+        freshness:
+          warn_after: {count: 26, period: hour}
+          error_after: {count: 50, period: hour}

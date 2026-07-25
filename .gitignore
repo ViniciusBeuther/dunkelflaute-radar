@@ -9,6 +9,7 @@ __pycache__/
 
 # Raw data and local warehouse (we version code, not data)
 data/raw/**/*.parquet
+data/reference/mastr_units.parquet
 warehouse/*.duckdb
 warehouse/*.duckdb.wal
 

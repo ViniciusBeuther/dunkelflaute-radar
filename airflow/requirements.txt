@@ -3,3 +3,5 @@ pyarrow
 requests
 entsoe-py
 python-dotenv
+dbt-core
+dbt-duckdb

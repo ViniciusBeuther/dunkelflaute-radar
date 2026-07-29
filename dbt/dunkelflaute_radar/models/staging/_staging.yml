@@ -22,6 +22,8 @@ models:
               - zone
               - valid_time
               - ingest_ts
+              - lat
+              - lon
 
   - name: stg_entsoe__generation
     columns:

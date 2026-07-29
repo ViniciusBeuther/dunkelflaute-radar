@@ -1,9 +1,14 @@
 from datetime import datetime
-
+import subprocess
 from airflow.sdk import dag, task
 
 from ingestion.entsoe_generation import ingest as ingest_entsoe_data
 from ingestion.openmeteo_weather import ingest as ingest_weather_data
+
+DBT_FLAGS = [
+    "--project-dir", "/opt/airflow/dbt/dunkelflaute_radar",
+    "--profiles-dir", "/opt/airflow/dbt/dunkelflaute_radar",    
+]
 
 @dag(
     dag_id="dunkelflaute_ingestion",
@@ -21,6 +26,13 @@ def dunkelflaute_ingestion():
     def ingest_entsoe():
         ingest_entsoe_data()
 
-    ingest_weather() >> ingest_entsoe()
+    @task
+    def dbt_run():
+        subprocess.run(["dbt", "run", *DBT_FLAGS], check=True)
 
+    @task
+    def dbt_test():
+        subprocess.run(["dbt", "test", *DBT_FLAGS], check=True)
+
+    ingest_weather() >> ingest_entsoe() >> dbt_run() >> dbt_test()
 dunkelflaute_ingestion()

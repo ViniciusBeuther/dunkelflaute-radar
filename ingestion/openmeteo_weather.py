@@ -9,15 +9,12 @@ in Phase 2.
 
 import pandas as pd
 import requests
-
+from pathlib import Path
 from ingestion.common.landing import write_partitioned_parquet
 
 OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast"
 
-# Single representative point per zone (see module docstring for the caveat).
-ZONE_COORDINATES = {
-    "DE": {"latitude": 51.1657, "longitude": 10.4515},  # geographic center of Germany
-}
+CAPACITY_GRID_PATH = Path("dbt/dunkelflaute_radar/seeds/capacity_grid.csv")
 
 HOURLY_VARIABLES = [
     "wind_speed_10m",
@@ -29,13 +26,15 @@ HOURLY_VARIABLES = [
     "diffuse_radiation",
 ]
 
+def load_capacity_grid(path: Path = CAPACITY_GRID_PATH) -> pd.DataFrame:
+    return pd.read_csv(path)
 
-def fetch_forecast(zone: str, forecast_days: int = 16) -> dict:
-    coordinates = ZONE_COORDINATES[zone]
+def fetch_forecast(grid: pd.DataFrame, forecast_days: int = 16) -> dict:
     response = requests.get(
         OPEN_METEO_URL,
         params={
-            **coordinates,
+            "latitude": ",".join(grid["lat"].astype(str)),
+            "longitude": ",".join(grid["lon"].astype(str)),
             "hourly": ",".join(HOURLY_VARIABLES),
             "forecast_days": forecast_days,
             "timezone": "GMT",
@@ -46,16 +45,25 @@ def fetch_forecast(zone: str, forecast_days: int = 16) -> dict:
     return response.json()
 
 
-def parse_forecast(payload: dict) -> pd.DataFrame:
-    hourly = pd.DataFrame(payload["hourly"])
-    hourly = hourly.rename(columns={"time": "valid_time"})
-    hourly["valid_time"] = pd.to_datetime(hourly["valid_time"], utc=True)
-    return hourly
+def parse_forecast(payload: list[dict], grid: pd.DataFrame) -> pd.DataFrame:
+    frames = []
+    for row, location_payload in zip(grid.itertuples(index=False), payload):
+        hourly = pd.DataFrame(location_payload["hourly"])
+        hourly = hourly.rename(columns={"time": "valid_time"})
+        hourly["valid_time"] = pd.to_datetime(hourly["valid_time"], utc=True)
+        hourly["lat"] = row.lat
+        hourly["lon"] = row.lon
+        hourly["wind_mw"] = row.wind_mw
+        hourly["solar_mw"] = row.solar_mw
+        frames.append(hourly)
+    
+    return pd.concat(frames, ignore_index=True)
 
 
 def ingest(zone: str = "DE") -> None:
-    payload = fetch_forecast(zone)
-    df = parse_forecast(payload)
+    grid = load_capacity_grid()
+    payload = fetch_forecast(grid)
+    df = parse_forecast(payload, grid)
     out_path = write_partitioned_parquet(df, source="openmeteo", dataset="weather_forecast", zone=zone)
     print(f"Wrote {len(df)} rows to {out_path}")
 

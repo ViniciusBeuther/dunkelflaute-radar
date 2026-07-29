@@ -26,3 +26,4 @@ airflow/config
 # macOS
 .DS_Store
 CLAUDE.md
+.claude/

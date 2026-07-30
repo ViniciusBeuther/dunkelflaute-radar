@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import subprocess
 from airflow.sdk import dag, task
 
@@ -18,11 +18,11 @@ DBT_FLAGS = [
     tags=["dunkelflaute-radar"],
 )
 def dunkelflaute_ingestion():
-    @task
+    @task(retries=3, retry_delay=timedelta(minutes=5))
     def ingest_weather():
         ingest_weather_data()
 
-    @task
+    @task(retries=3, retry_delay=timedelta(minutes=5))
     def ingest_entsoe():
         ingest_entsoe_data()
 

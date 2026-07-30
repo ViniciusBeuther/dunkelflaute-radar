@@ -2,15 +2,18 @@
 
 Daily ELT pipeline for European weather and energy data, forecasting low
 wind/solar generation windows ("Dunkelflaute") and quantifying forecast
-accuracy against real generation outcomes. See [CLAUDE.md](CLAUDE.md) for
-architecture decisions and current project status.
+accuracy against real generation outcomes.
 
 Learning project: built incrementally while learning dbt, Airflow, and
-modern data engineering. **Phase 1 — Solid plumbing is complete**: ingestion,
-partitioned Parquet landing zone, dbt staging models with tests and source
-freshness, and orchestration via Airflow (Docker). Phase 2 (spatial
-weighting, forecast-skill scoring, cross-zone interconnection, AWS + IaC) is
-planned but not started — see `CLAUDE.md`.
+modern data engineering. **Phase 1 — solid plumbing — is complete**:
+ingestion, partitioned Parquet landing zone, dbt staging models with tests
+and source freshness, and orchestration via Airflow (Docker), including
+`dbt run`/`dbt test` as scheduled tasks. **Phase 2 is underway**: weather is
+now sampled across a capacity-weighted 0.5°×0.5° grid (293 points across
+Germany, weighted by real installed wind/solar capacity from the German
+Marktstammdatenregister) instead of a single representative point.
+Forecast-skill scoring, a rigorous Dunkelflaute event definition, cross-zone
+interconnection with France, and AWS/Terraform migration are still planned.
 
 ## Setup
 
@@ -57,7 +60,8 @@ Then open `http://localhost:8080` (login `airflow`/`airflow`), unpause
 ## Running dbt
 
 Every `dbt` command must be run **from the repo root**, with both flags
-below (see `CLAUDE.md` for why the paths are set up this way):
+below (relative paths in `profiles.yml`/`_sources.yml` resolve against the
+current working directory, not the file's location):
 
 ```bash
 uv run dbt run  --project-dir dbt/dunkelflaute_radar --profiles-dir dbt/dunkelflaute_radar

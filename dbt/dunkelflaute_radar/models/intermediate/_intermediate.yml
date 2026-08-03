@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: int_weather_national
+    columns:
+      - name: zone
+        tests:
+          - not_null
+      - name: valid_time
+        tests:
+          - not_null
+      - name: ingest_ts
+        tests:
+          - not_null
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - zone
+              - valid_time
+              - ingest_ts

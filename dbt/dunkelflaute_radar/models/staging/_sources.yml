@@ -12,7 +12,7 @@ sources:
           error_after: {count: 50, period: hour}
       - name: entsoe_generation
         meta:
-          external_location: "read_parquet('data/raw/entsoe/generation/zone=*/ingest_date=*/*.parquet', hive_partitioning = true)"
+          external_location: "read_parquet('data/raw/entsoe/generation/zone=*/ingest_date=*/*.parquet', hive_partitioning = true, union_by_name = true)"
         loaded_at_field: ingest_ts
         freshness:
           warn_after: {count: 26, period: hour}
